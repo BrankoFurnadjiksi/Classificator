@@ -91,6 +91,16 @@ class Classificator {
 		System.out.println();
 		*/
 		
+		
+		for (String name: values.keySet()){
+
+            String key = name.toString();
+            String value = values.get(name).toString();  
+            System.out.println(key + " " + value);  
+
+		} 
+		
+		
 		double onTime = gaussian(highSchoolGpa, values.get(NA_VREME + PROSEK_SREDNO + MU), values.get(NA_VREME + PROSEK_SREDNO + VARIANCE))
 				* values.get(NA_VREME + highSchool)
 				* gaussian(collegeGpa, values.get(NA_VREME + PROSEK_PRVA + MU), values.get(NA_VREME + PROSEK_PRVA + VARIANCE))
@@ -135,13 +145,12 @@ class Classificator {
 		double craft = 1.0*tuples.stream().filter(i -> i.getGraduated().equals(category)).filter(i -> i.getHighSchool().equals(SREDNO_STRUCNO)).count();
 		
 		if (gymnasium == 0 || craft == 0){
-			gymnasium++;
-			craft++;
-			total += 2;
+			gymnasium = (gymnasium + 0.5)/(total+1);
+			craft = (craft + 0.5)/(total+1);
+		} else {
+			gymnasium /= total;
+			craft /= total;
 		}
-		
-		gymnasium /= total;
-		craft /= total;
 		
 		return new HighSchool(gymnasium, craft);
 	}
@@ -153,17 +162,16 @@ class Classificator {
 		double more_than_five = 1.0*tuples.stream().filter(i -> i.getGraduated().equals(category)).filter(i -> i.getFailedExams().equals(POVEKE_OD_PET)).count();
 		
 		if (zero == 0 || one_to_two == 0 || three_to_five == 0 || more_than_five == 0){
-			zero++;
-			one_to_two++;
-			three_to_five++;
-			more_than_five++;
-			total += 4;
+			zero = (zero + 0.25)/(total + 1);
+			one_to_two = (one_to_two + 0.25)/(total + 1);
+			three_to_five = (three_to_five + 0.25)/(total + 1);
+			more_than_five = (more_than_five + 0.25)/(total + 1);
+		} else {
+			zero /= total;
+			one_to_two /= total;
+			three_to_five /= total;
+			more_than_five /= total;
 		}
-		
-		zero /= total;
-		one_to_two /= total;
-		three_to_five /= total;
-		more_than_five /= total;
 		
 		return new FailedExams(zero, one_to_two, three_to_five, more_than_five);
 	}
@@ -245,15 +253,15 @@ class Classificator {
 		values.put(NA_VREME + PROSEK_SREDNO + MU, onTimeHighSchoolGpaParametars.getMu());
 		values.put(NA_VREME + PROSEK_SREDNO + VARIANCE, onTimeHighSchoolGpaParametars.getVariance());
 		values.put(NA_VREME + PROSEK_PRVA + MU, onTimeCollegeGpaParametars.getMu());
-		values.put(NA_VREME + PROSEK_PRVA + VARIANCE, onTimeCollegeGpaParametars.getMu());
+		values.put(NA_VREME + PROSEK_PRVA + VARIANCE, onTimeCollegeGpaParametars.getVariance());
 		values.put(SO_ZADOCNUVANJE + PROSEK_SREDNO + MU, delayedHighSchoolGpaParametars.getMu());
 		values.put(SO_ZADOCNUVANJE + PROSEK_SREDNO + VARIANCE, delayedHighSchoolGpaParametars.getVariance());
 		values.put(SO_ZADOCNUVANJE + PROSEK_PRVA + MU, delayedCollegeGpaParametars.getMu());
-		values.put(SO_ZADOCNUVANJE + PROSEK_PRVA + VARIANCE, delayedCollegeGpaParametars.getMu());
+		values.put(SO_ZADOCNUVANJE + PROSEK_PRVA + VARIANCE, delayedCollegeGpaParametars.getVariance());
 		values.put(NE_DIPLOMIRAL + PROSEK_SREDNO + MU, didntGraduateHighSchoolGpaParametars.getMu());
 		values.put(NE_DIPLOMIRAL + PROSEK_SREDNO + VARIANCE, didntGraduateHighSchoolGpaParametars.getVariance());
 		values.put(NE_DIPLOMIRAL + PROSEK_PRVA + MU, didntGraduateCollegeGpaParametars.getMu());
-		values.put(NE_DIPLOMIRAL + PROSEK_PRVA + VARIANCE, didntGraduateCollegeGpaParametars.getMu());
+		values.put(NE_DIPLOMIRAL + PROSEK_PRVA + VARIANCE, didntGraduateCollegeGpaParametars.getVariance());
 		
 		values.put(NA_VREME + GIMNAZISKO, onTimeHighSchool.getGymnasium());
 		values.put(NA_VREME + SREDNO_STRUCNO, onTimeHighSchool.getCraft());
