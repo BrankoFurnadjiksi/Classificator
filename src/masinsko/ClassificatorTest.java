@@ -3,10 +3,6 @@ package masinsko;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*
- *  Implemented by Zafir Stojanovski (151015) & Branko Furnadziski (151025), 11.11.2017.
- */
-
 public class ClassificatorTest {
 	
 	public static void main(String[] args) {
